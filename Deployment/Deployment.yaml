@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: iakaun-$ENVMENT
+  name: $MODULE
+  labels:
+    app: $MODULE
+spec:
+  replica: 1
+  selector:
+    matchLabels:
+      app: $MODULE
+  template:
+    metadata:
+      labels:
+        app: $MODULE
+    spec:
+      volumes:
+        - name: config-properties-hello
+          configMap:
+            name: config-properties-hello
+            defaultMode: 420
+      containers:
+      - name: $MODULE
+        image: $CONTAINER_IMAGE
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh","/tmp/trust_certs.sh"]
+        env:
+        - name: TZ
+          value: Asia/Kuala_Lumpur
+        - name: SPRING_PROFILES_ACTIVE
+          value: $SPRING_PROFILES_ACTIVE
+        volumeMounts:
+          - name: config-properties-hello
+            mountPath: /config
+        ports:
+        - containerPort: 5701
+          name: hazelcast
+        - containerPort: 8080
+          name: $MODULE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: $MODULE
+  name: $MODULE
+  namespace: iakaun-$ENVMENT
+spec:
+  ports:
+    - name: app
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: $MODULE

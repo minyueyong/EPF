@@ -1,0 +1,59 @@
+plugins {
+    id 'org.springframework.boot' version '3.2.1'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.kwsp'
+version = '0.0.1-SNAPSHOT'
+description = 'KWSP migrate'
+
+sourceCompatibility = '17'
+
+ext {
+    camelVersion = '4.4.0'
+    springBootVersion = '3.2.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+        mavenBom "org.apache.camel.springboot:camel-spring-boot-bom:${camelVersion}"
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.data:spring-data-mongodb:4.2.2'
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation "org.apache.camel:camel-sql:${camelVersion}"
+    implementation "org.apache.camel:camel-core:${camelVersion}"
+    implementation "org.apache.camel:camel-mongodb:${camelVersion}"
+    implementation 'com.sun.xml.bind:jaxb-impl:2.3.4'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation "org.apache.camel.springboot:camel-jaxb-starter:${camelVersion}"
+    implementation 'org.apache.camel.springboot:camel-servlet-starter'
+    implementation 'org.apache.camel.springboot:camel-spring-boot-starter'
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.1.0-M1'
+     implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: '4.11.1'
+
+ implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+     annotationProcessor 'org.projectlombok:lombok:1.18.22'
+}
+
+jar {
+    exclude('META-INF/*.DSA', 'META-INF/*.SF', 'META-INF/*.RSA')
+    exclude('org/projectlombok/**')
+}
+
+test {
+    useJUnitPlatform()
+}

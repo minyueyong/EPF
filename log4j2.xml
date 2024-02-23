@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="LogToConsole" target="SYSTEM_OUT">
+           <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%5level) --- [%15t] %cyan(%-50logger{36}) [session_id:%X{session_id} , epf_no:%X{epf_no}] : %msg%n"/>
+        </Console>
+        
+        <RollingFile name="LogToFile" fileName="${sys:catalina.base}/logs/payment.log" filePattern="${sys:catalina.base}/logs/payment.%d{dd-MMM}.log.gz" ignoreExceptions="false">
+    		<PatternLayout>
+    			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%5level) --- [%15t] %cyan(%-50logger{36}) [session_id:%X{session_id} , epf_no:%X{epf_no}] : %msg%n</pattern>
+        		<!-- <Pattern>%d{yyyy-MM-dd HH:mm:ss} %p %m%n</Pattern> -->
+   	 		</PatternLayout>
+    		<Policies>
+        		<OnStartupTriggeringPolicy />
+        		<SizeBasedTriggeringPolicy size="10 MB" />
+        		<TimeBasedTriggeringPolicy />
+    		</Policies>
+    		<DefaultRolloverStrategy max="5" />
+		</RollingFile>
+		
+		<root>
+	        <priority value="DEBUG"/>
+	        <appender-ref ref="RollingAppender" />
+	    </root>
+		
+    </Appenders>
+    <Loggers>
+        <Logger name="my.gov.kwsp" level="DEBUG" additivity="false">
+            <AppenderRef ref="LogToFile"/>
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Logger name="my.gov.kwsp" level="ERROR" additivity="false">
+            <AppenderRef ref="LogToFile"/>
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Logger name="org.springframework.boot" level="WARN" additivity="false">
+        	<AppenderRef ref="LogToFile"/>
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Logger name="org.springframework.boot" level="ERROR" additivity="false">
+        	<AppenderRef ref="LogToFile"/>
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <Root level="off">
+            <AppenderRef ref="LogToFile" level="error"/>
+            <AppenderRef ref="LogToConsole"/>
+        </Root>
+    </Loggers>
+</Configuration>
